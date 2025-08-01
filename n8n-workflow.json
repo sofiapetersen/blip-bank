@@ -1,0 +1,640 @@
+{
+  "name": "My workflow 5",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "1c6cb356-9d21-4f32-b8f0-bd6feace09eb",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        160,
+        0
+      ],
+      "id": "270e8d6d-14e3-4e61-95d6-ce40375370c8",
+      "name": "Webhook",
+      "webhookId": "1c6cb356-9d21-4f32-b8f0-bd6feace09eb"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0",
+          "mode": "list",
+          "cachedResultName": "BLIP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "bank debts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "cpf",
+              "lookupValue": "={{ $('User Variables').first().json.cpf }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        580,
+        0
+      ],
+      "id": "281e6c6a-fec3-4255-8dbe-1ad4409c75a1",
+      "name": "GS - Get Bank History",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WtbkfMqKw9Mzbfyb",
+          "name": "Google Sheets account - Sofia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "371e547b-b148-422b-9804-79ba38ff59cd",
+              "name": "value",
+              "value": "={{ $json.value }}",
+              "type": "number"
+            },
+            {
+              "id": "12502b66-5311-4000-873c-92331188826b",
+              "name": "date",
+              "value": "={{ $json.date }}",
+              "type": "string"
+            },
+            {
+              "id": "1089f4c4-5bef-4e86-b8d4-74aa0e63f969",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "16c444a0-9e41-40c9-af1c-2df50348daa9",
+              "name": "message",
+              "value": "={{ $('User Variables').first().json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "de2a7b72-aaa2-4030-ad45-7aa98fcb063c",
+              "name": "times_renegotiated",
+              "value": "={{ $json['times renegotiated'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        0
+      ],
+      "id": "fa368a83-c13e-4aff-8aff-b03d098d0a03",
+      "name": "Bank Variables"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0",
+          "mode": "list",
+          "cachedResultName": "BLIP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2026928529,
+          "mode": "list",
+          "cachedResultName": "history",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0/edit#gid=2026928529"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sender": "user",
+            "message": "={{ $('User Variables').first().json.message }}",
+            "cpf": "={{ $('User Variables').first().json.cpf }}"
+          },
+          "matchingColumns": [
+            "phone"
+          ],
+          "schema": [
+            {
+              "id": "cpf",
+              "displayName": "cpf",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "sender",
+              "displayName": "sender",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1560,
+        0
+      ],
+      "id": "84ee39e5-4b7c-4d22-91a6-c6b5e0853098",
+      "name": "GS - Add User History",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WtbkfMqKw9Mzbfyb",
+          "name": "Google Sheets account - Sofia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0",
+          "mode": "list",
+          "cachedResultName": "BLIP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2026928529,
+          "mode": "list",
+          "cachedResultName": "history",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0/edit#gid=2026928529"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sender": "bot",
+            "message": "={{ $('AI Agent').first().json.output }}",
+            "cpf": "={{ $('User Variables').first().json.cpf }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "cpf",
+              "displayName": "cpf",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "sender",
+              "displayName": "sender",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1340,
+        0
+      ],
+      "id": "22e11d07-a7d6-4db0-818e-2fa5ca0e8ceb",
+      "name": "GS - Add Bot History",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WtbkfMqKw9Mzbfyb",
+          "name": "Google Sheets account - Sofia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('User Variables').first().json.cpf }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1020,
+        220
+      ],
+      "id": "d1c9feda-e3a9-4fe5-b59c-e73e9eb6fa8f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $fromAI(\"emailAddress\") }}",
+        "subject": "={{ $fromAI(\"subject\") }}",
+        "message": "={{ $fromAI(\"emailBody\") }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1140,
+        220
+      ],
+      "id": "2bcb04e6-90a1-421d-bf08-54d65f090839",
+      "name": "Send Email",
+      "webhookId": "407226eb-3e2f-4397-b2e8-7c968191a4ff",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "c7HuHZDMH74wsmpz",
+          "name": "Gmail account Sofia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "=# Blipper - Assistente de Renegociação Banco XYZ\n\n## Perfil do Assistente\nVocê é o **Blipper**, assistente virtual especializado em renegociação de dívidas. Sua missão é ajudar clientes inadimplentes com empatia, clareza e respeito, seguindo rigorosamente as políticas bancárias.\n\n## Verificação Inicial Obrigatória\n**SEMPRE verifique os dados da dívida antes de iniciar:**\n\n### Se existir dívida registrada:\n- **Cliente:** `{{ $json.name || \"Prezado cliente\" }}`\n- **Valor:** `{{ $json.value || \"DIVIDA NÃO EXISTE\" }}`\n- **Vencimento:** `{{ $json.date || \"Data não informada\" }}`\n- **Histórico de Renegociações:** `{{ $json.times_renegotiated || 0 }}`\n\n### Se NÃO existir dívida:\n \"Olá [Nome], verifiquei nosso sistema e não encontrei dívidas registradas em seu nome. Caso tenha dúvidas sobre sua situação financeira, posso transferir você para nossos especialistas. Como deseja prosseguir?\"\n\n\n## Política de Descontos por Histórico\n**IMPORTANTE:** O desconto varia conforme o histórico de renegociações do cliente:\n\n- **Primeira renegociação (times_renegotiated = 1):** 10% de desconto\n- **Segunda renegociação (times_renegotiated = 2):** 20% de desconto  \n- **Terceira renegociação ou mais (times_renegotiated = 3 ou mais (4, 5...)):** 25% de desconto\n\n## Fluxo de Atendimento\n\n### 1. Saudação Inicial\n\n\"Olá [Nome], entendo que situações financeiras podem ser desafiadoras. \nEstou aqui para ajudar com sua dívida de [Valor], em atraso desde [Data]. \nPodemos conversar sobre uma solução?\"\"\n\n### 2. Apresentação das Opções\n**Calcule o desconto baseado no histórico:**\n- Se `times_renegotiated = 1`: desconto de 10%\n- Se `times_renegotiated = 2`: desconto de 20%\n- Se `times_renegotiated = 3 ou mais (4, 5...)`: desconto de 25%\n\n**⚠️ IMPORTANTE:** Calcule quanto de desconto fica para o cliente antes de sugerir as opções\n\n\n\"Com base em sua situação e histórico, temos duas opções especiais:\n\n💰 Opção 1: Desconto de [X]% à vista \n   → Valor final: R$ [valor com desconto]\n   \n📅 Opção 2: Parcelamento em até 6x \n   → Entrada de 20% + 5 parcelas de R$ [valor da parcela]\n\nEssas condições foram criadas para tornar o pagamento mais acessível.\"\n\n### 3. Tratamento de Objeções\n#### Cliente diz que não pode pagar:\n\n\"Entendo perfeitamente. Pode me contar um pouco mais sobre sua situação? \nTalvez encontremos uma alternativa melhor.\"\n\n#### Cliente pede condições melhores:\nConfira qual é a vez que o cliente ta solicitando a renegociação: {{ $json.times_renegotiated || 0 }}\nSe for:\n- **Primeira renegociação (times_renegotiated = 1):** 10% de desconto\n- **Segunda renegociação (times_renegotiated = 2):** 20% de desconto  \n- **Terceira renegociação ou mais (times_renegotiated = 3 ou mais (4, 5...)):** 25% de desconto\n\n\n\"Verifiquei no sistema e, no momento, essas são as melhores condições disponíveis considerando seu histórico. Posso reavaliar em 30 dias se sua situação mudou.\"\n\nou então:\n\n\"Verifiquei no sistema e tenho uma opção melhor!\"\n``` e indique a opção.\n\n### 4. Fechamento da Negociação\n\n\"Qual opção você prefere?\nDigite:\n• 1 → Desconto à vista ([X]% off)\n• 2 → Parcelamento em 6x\n• Outra → Para discutir alternativas\"\n\n### 5. Coleta de Dados\n**Quando cliente escolher opção 1 ou 2:**\n\"Para enviar os detalhes do pagamento, preciso do seu e-mail:\n\n### 6. Finalização\n#### Se aceitar:\n\n\"Perfeito! Vou preparar a documentação e enviar para seu e-mail em até 24h. \nObrigado por confiar no Banco XYZ!\"\n\nNão informe no chat quais são as informações de pagamento, apenas diga que vai por email.\n\n#### Se recusar:\n\n\"Entendo sua decisão. Estarei disponível caso mude de ideia. \nTenha um ótimo dia!\"\n\n## Processo de Envio de E-mail e Atualização\n\n### Após confirmação do cliente:\n\n1. **Enviar E-mail:** Use a tool \"Send Email\" do Gmail para enviar informações de pagamento\n   - **Chave PIX:** `sofiapeter100@gmail.com` (Nubank)\n   - Incluir valores calculados e forma de pagamento escolhida\n\n2. **⚠️ OBRIGATÓRIO - Atualizar Banco de Dados:**\n   - Após enviar o e-mail, use IMEDIATAMENTE a tool \"update row\"\n   - Incrementar a coluna \"times_renegotiated\": \n     - Se era 0, atualizar para 1\n     - Se era 1, atualizar para 2\n     - Se era 2, atualizar para 3\n     - E assim por diante...\n\n**Exemplo de atualização:**\n```\nValor atual: times_renegotiated = 1\nNovo valor: times_renegotiated = 2\n```\n\nE então avise o cliente que enviou um email com as informações de pagamento! Não informe no chat quais são as informações de pagamento, apenas diga que vai por email.\n\n## Diretrizes de Conduta\n\n### ✅ Sempre Fazer:\n- Verificar histórico de renegociações antes de apresentar opções\n- Calcular descontos corretos baseados no histórico\n- Manter tom empático e profissional\n- Adaptar linguagem ao cliente\n- Verificar compreensão antes de avançar\n- **ATUALIZAR o banco de dados após enviar e-mail**\n- Oferecer ajuda adicional se necessário\n\n### ❌ Nunca Fazer:\n- Aplicar desconto incorreto\n- Esquecer de atualizar o banco de dados após renegociação\n- Pressionar ou constranger\n- Julgar a situação do cliente  \n- Avançar sem verificar entendimento\n- Ignorar sinais de confusão/frustração\n\n## Palavras-chave para Personalização\n- **Empático:** \"Entendo\", \"Compreendo\", \"Estou aqui para ajudar\"\n- **Profissional:** \"Verificar\", \"Analisar\", \"Processar\"\n- **Acolhedor:** \"Não se preocupe\", \"Vamos encontrar uma solução\"\n\n## Resumo da Política de Descontos\n| Renegociações Anteriores | Desconto Aplicado |\n|-------------------------|-------------------|\n| 1 (primeira vez)        | 10%              |\n| 2 (segunda vez)         | 20%              |\n| 3+ (terceira ou mais)   | 25%              |"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1000,
+        0
+      ],
+      "id": "80cccda0-4c76-4a66-98b5-64b9b6b296f7",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $('AI Agent').first().json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1780,
+        0
+      ],
+      "id": "49f985cf-3f18-4a28-8520-da3f66a5048f",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cf7f5e02-34e0-4e6e-b1c3-b66ab6c0f3cb",
+              "name": "cpf",
+              "value": "={{ $json.body.cpf.replace(/^(\\d{3})(\\d{3})(\\d{3})(\\d{2})$/, '$1.$2.$3-$4') }}",
+              "type": "string"
+            },
+            {
+              "id": "b7ca9c1e-bffa-4a09-8980-5317a4cf6036",
+              "name": "name",
+              "value": "={{ $json.body.fullName }}",
+              "type": "string"
+            },
+            {
+              "id": "b2928b8b-ffd4-468f-801f-35eb682bb207",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        0
+      ],
+      "id": "dd4707ec-d3c4-4842-a5aa-d100dca37a58",
+      "name": "User Variables"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0",
+          "mode": "list",
+          "cachedResultName": "BLIP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "bank debts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9DA81mo-t1CRWbDCL0H38OMCWzFPCSc7jCK6MTVMe0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "times renegotiated": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('times_renegotiated', ``, 'string') }}",
+            "cpf": "={{ $('User Variables').first().json.cpf }}"
+          },
+          "matchingColumns": [
+            "cpf"
+          ],
+          "schema": [
+            {
+              "id": "cpf",
+              "displayName": "cpf",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "value",
+              "displayName": "value",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "times renegotiated",
+              "displayName": "times renegotiated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        1260,
+        220
+      ],
+      "id": "e20d62dd-ec30-44c3-988a-61b772bedf9a",
+      "name": "Update row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WtbkfMqKw9Mzbfyb",
+          "name": "Google Sheets account - Sofia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        220
+      ],
+      "id": "c3c83e84-16d4-4443-83cc-157f9e89eb46",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PI7fMXdRkS0GMBav",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "User Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GS - Get Bank History": {
+      "main": [
+        [
+          {
+            "node": "Bank Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bank Variables": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GS - Add User History": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GS - Add Bot History": {
+      "main": [
+        [
+          {
+            "node": "GS - Add User History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "GS - Add Bot History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User Variables": {
+      "main": [
+        [
+          {
+            "node": "GS - Get Bank History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "10742532-3b3b-4529-aa6d-8cf193dd194d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6a6e6f724b50f649394efda30179ae7c7349d6a87e885b238e94712df416c59d"
+  },
+  "id": "U94NL07mNCom1tDA",
+  "tags": []
+}
