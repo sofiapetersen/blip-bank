@@ -61,10 +61,25 @@ export function ChatInterface({ userData, onLogout }: ChatInterfaceProps) {
     setIsLoading(true);
 
     try {
-      const response = await fetch(import.meta.env.VITE_WEBHOOK_URL, {
+      // Verificar se a variável de ambiente existe
+      const webhookUrl = import.meta.env.VITE_WEBHOOK_URL;
+      
+      // Debug - remova depois que funcionar
+      console.log('Webhook URL:', webhookUrl);
+      console.log('Environment:', import.meta.env.MODE);
+      console.log('All env vars:', import.meta.env);
+      
+      if (!webhookUrl) {
+        throw new Error('VITE_WEBHOOK_URL não está configurada. Verifique as variáveis de ambiente no Vercel.');
+      }
+
+      console.log('Enviando mensagem para:', webhookUrl);
+
+      const response = await fetch(webhookUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
         body: JSON.stringify({
           message: inputMessage,
@@ -74,8 +89,12 @@ export function ChatInterface({ userData, onLogout }: ChatInterfaceProps) {
         }),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
       if (response.ok) {
         const responseData = await response.text();
+        console.log('Response data:', responseData);
         
         // Exibe a resposta real do webhook
         const assistantMessage: Message = {
@@ -87,23 +106,39 @@ export function ChatInterface({ userData, onLogout }: ChatInterfaceProps) {
 
         setMessages(prev => [...prev, assistantMessage]);
       } else {
-        throw new Error("Erro ao enviar mensagem");
+        const errorText = await response.text();
+        console.error('Erro da API:', response.status, errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText || 'Erro desconhecido'}`);
       }
     } catch (error) {
-      console.error("Erro ao enviar mensagem:", error);
+      console.error("Erro detalhado:", error);
       
-      const errorMessage: Message = {
+      let errorMessage = "Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('VITE_WEBHOOK_URL')) {
+          errorMessage = "Erro de configuração: URL do webhook não encontrada.";
+        } else if (error.message.includes('405')) {
+          errorMessage = "Método não permitido. Verifique a configuração do webhook.";
+        } else if (error.message.includes('404')) {
+          errorMessage = "Endpoint não encontrado. Verifique a URL do webhook.";
+        } else if (error.message.includes('CORS')) {
+          errorMessage = "Erro de CORS. O servidor não permite requisições desta origem.";
+        }
+      }
+      
+      const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
-        content: "Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.",
+        content: errorMessage,
         sender: "assistant",
         timestamp: new Date(),
       };
 
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages(prev => [...prev, errorMsg]);
       
       toast({
         title: "Erro",
-        description: "Não foi possível enviar a mensagem. Tente novamente.",
+        description: error instanceof Error ? error.message : "Erro desconhecido",
         variant: "destructive",
       });
     } finally {
@@ -229,7 +264,7 @@ export function ChatInterface({ userData, onLogout }: ChatInterfaceProps) {
                 size="icon"
               >
                 {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" /> 
                 ) : (
                   <Send className="h-4 w-4" />
                 )}
